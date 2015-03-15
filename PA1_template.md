@@ -1,9 +1,4 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 Assignment 1 for Reproducible Research by Jianyi.
 
@@ -12,7 +7,8 @@ Assignment 1 for Reproducible Research by Jianyi.
 (Process/transform the data (if necessary) into a format suitable for your analysis)
 
 1.Load the data  
-```{r,message=FALSE}
+
+```r
 #some preparation
 #install.packages("dplyr")
 #install.packages("ggplot2")
@@ -34,7 +30,8 @@ For this part of the assignment, you can ignore the missing values in the datase
 
 1.Calculate the total number of steps taken per day
 
-```{r}
+
+```r
 #clean all NA values
 data=filter(rawdata,complete.cases(rawdata$steps))
 
@@ -57,19 +54,33 @@ for(i in SumInfo$Date){
   SumInfo$TotalSteps[count]=as.numeric(sum(subset$steps))#calculate the total steps for that day
   count=count+1
 }
-
 ```
 
 2.If you do not understand the difference between a histogram and a barplot, research the difference between them. Make a histogram of the total number of steps taken each day
 
-```{r}
+
+```r
 hist(SumInfo$TotalSteps,main="Histogram for total steps taken each day ",breaks=10,xlab="Toatl steps",col="red")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
 3.Calculate and report the mean and median of the total number of steps taken per day
-```{r}
+
+```r
 mean(SumInfo$TotalSteps)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median(SumInfo$TotalSteps)
+```
+
+```
+## [1] 10765
 ```
 
 
@@ -77,7 +88,8 @@ median(SumInfo$TotalSteps)
 
 
 1.Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
-```{r}
+
+```r
 #create/initialize a data frame(called "PatternInfo") to summarize information on total number of steps taken per day. The row is each interval and it has two columns:
 #Interval       IntervalAverage
 #0                x
@@ -97,14 +109,20 @@ for(i in unique(data$interval)){
 
 #Plotting
 plot(PatternInfo$Interval,PatternInfo$IntervalAverage,main="Average Daily Activity Pattern",xlab="interval",ylab="Average steps",type="l")
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
 
 
 2.Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
-```{r}
+
+```r
 PatternInfo$Interval[which(PatternInfo$IntervalAverage==max(PatternInfo$IntervalAverage))]
+```
+
+```
+## [1] 835
 ```
 
 
@@ -114,19 +132,44 @@ Note that there are a number of days/intervals where there are missing values (c
 
 1.Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
-```{r}
-summary(complete.cases(rawdata$steps))
-summary(complete.cases(rawdata$interval))
-summary(complete.cases(rawdata$date))
-# it seems only setps have missing values
 
+```r
+summary(complete.cases(rawdata$steps))
+```
+
+```
+##    Mode   FALSE    TRUE    NA's 
+## logical    2304   15264       0
+```
+
+```r
+summary(complete.cases(rawdata$interval))
+```
+
+```
+##    Mode    TRUE    NA's 
+## logical   17568       0
+```
+
+```r
+summary(complete.cases(rawdata$date))
+```
+
+```
+##    Mode    TRUE    NA's 
+## logical   17568       0
+```
+
+```r
+# it seems only setps have missing values
 ```
 
 2.Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
 
 3.Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
-```{r}
+
+```r
 #create a data frame called RevisedData, which has all missing values fixed by the mean of the 5 mins interval average
 RevisedData=rawdata
 
@@ -142,7 +185,8 @@ for(i in MissingRows){
 
 
 4.Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day. Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
-```{r}
+
+```r
 #Calculate(for the revised data frame with all NA values fixed) the  total numbers for each day, mean and median, basically did the same thing as before except change data->RevisedData
 
 ##check how many days are there in the data
@@ -172,7 +216,11 @@ for(i in SumInfoII$Date){
 par(mfrow=c(1,2))
 hist(SumInfo$TotalSteps,main="Histogram for total steps taken each day ",breaks=10,xlab="Toatl steps",col="red")#before 
 hist(SumInfoII$TotalSteps,breaks=10,xlab="Toatl steps",col="light blue")#after
- 
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
+
+```r
 #compare the two histogram density lines
 par(mfrow=c(1,1))
 plot(density(SumInfo$TotalSteps),col="red",ylim=range(0,0.0002),main="Histogram Density before and after fixing NA values")
@@ -181,13 +229,41 @@ lines(density(SumInfoII$TotalSteps),col="light blue")
 legend("topright",c("After","Before"), col=c("light blue","red"), lwd=c(1,1),lty =c(1,1))
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-9-2.png) 
+
 The mean and median didn't change. However, the curve looks more "concentrated" and more "Gaussian-like".
-```{r}
+
+```r
 ###calculate the mean and median before and after fixation
 mean(SumInfo$TotalSteps)#oldmean
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 mean(SumInfoII$TotalSteps)#newmean
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median(SumInfo$TotalSteps)#oldmedian
+```
+
+```
+## [1] 10765
+```
+
+```r
 median(SumInfoII$TotalSteps)#newmedian
+```
+
+```
+## [1] 10766.19
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
@@ -195,15 +271,16 @@ median(SumInfoII$TotalSteps)#newmedian
 For this part the weekdays() function may be of some help here. Use the dataset with the filled-in missing values for this part.
 
 1.Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
-```{r}
+
+```r
 newdata=mutate(RevisedData,weekend=(weekdays(ymd(RevisedData$date))=="Saturday"|weekdays(ymd(RevisedData$date))=="Sunday"))
 newdata$weekend[which(newdata$weekend==TRUE)]="Weekend"
 newdata$weekend[which(newdata$weekend==FALSE)]="Weekday"
 ```
 
 2.Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). See the README file in the GitHub repository to see an example of what this plot should look like using simulated data.
-```{r}
 
+```r
 #create an empty dataframe
 #Interval WeekdayAverage WeekendAverage
 #   0         NA             NA
@@ -234,5 +311,6 @@ plot(PatternInfo$Interval,PatternInfo$WeekdayAverage,main="Average Weekday Daily
 legend("topright",c("Weekend","Weekday"), col=c("blue","red"), lwd=c(1,1),lty =c(1,1),cex=0.8)
  
 plot(PatternInfo$Interval,PatternInfo$WeekendAverage,main="Average Weekend Daily Activity Pattern",xlab="interval",ylab="Average steps",type="l",col="blue")
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-12-1.png) 
